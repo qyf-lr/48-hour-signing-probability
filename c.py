@@ -51,7 +51,6 @@ df=(leads
     )
 
 
-
 df['target_48h']=((df['contract_signed_time']-df['first_touch_time'])<=pd.Timedelta(hours=48)).astype(int)
 
 
