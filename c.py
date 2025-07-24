@@ -8,7 +8,6 @@ emails =pd.read_csv('email_engagement.csv',parse_dates=['email_sent_time'])
 calls =pd.read_csv('sales_activity.csv',parse_dates=['call_time'])
 contracts  = pd.read_csv('contracts.csv', parse_dates=['contract_signed_time'])
 
-
 #事件表---宽特征
 event_pivot =(events
               .assign(dummy=1)
