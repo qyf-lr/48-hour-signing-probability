@@ -74,16 +74,6 @@ for c in cat_cols:
 #保存结果
 df.to_parquet('stage1_integrated',index=False)
 print('阶段一数据收集完成',len(df))
-#快速验证
-'''
-print(df.info())
-print(df.isna().sum().sort_values(ascending=False).head())
-print(df['contract_value'].describe())
-print(df.columns.tolist())
-'''
-
-
-
 
 events30=events.merge(leads[['lead_id','first_touch_time']],on='lead_id',how='left')
 mask30=(events30['event_time']-events30['first_touch_time'])<=pd.Timedelta(minutes=30)
@@ -114,13 +104,13 @@ df[thirty_cols] = df[thirty_cols].fillna(0)
 
 
 
-# 1) 转数值，非法值变 NaN
+#转数值，非法值变 NaN
 df['form_length'] = pd.to_numeric(df['form_length'], errors='coerce')
 
-# 2) 用分桶前，把 NaN 先填掉（可选，也可直接 drop）
+#用分桶前，把 NaN 先填掉
 df['form_length'] = df['form_length'].fillna(df['form_length'].median())
 
-# 3) 再分桶
+#再分桶
 df['form_length_bucket'] = pd.cut(
     df['form_length'],
     bins=[0, 3, 5, 7, 10],
@@ -129,12 +119,12 @@ df['form_length_bucket'] = pd.cut(
 
 
 
-# 11. 保存中间结果
+#保存中间结果
 out_path = Path('stage1_integrated.parquet')
 df.to_parquet(out_path, index=False)
-print('✅ 阶段一完成，行数:', len(df))
-print('✅ 目标变量分布:\n', df['target_48h'].value_counts())
-print('✅ 缺失值检查:\n', df.isna().sum().sort_values(ascending=False).head())
+print('阶段一完成，行数:', len(df))
+print('目标变量分布:\n', df['target_48h'].value_counts())
+print('缺失值检查:\n', df.isna().sum().sort_values(ascending=False).head())
 
 
 print(df.info())
